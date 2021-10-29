@@ -7,8 +7,8 @@ from Cryptodome.Random import get_random_bytes
 
 
 def key_pair_gen():
-    # generate RSA (1024b) public/private key pair
-    private_key = RSA.generate(1024)
+    # generate RSA (2048) public/private key pair
+    private_key = RSA.generate(2048)
     public_key = private_key.publickey()
 
     print('\nGenerating a public/private RSA key pair . . . . . ')
@@ -77,7 +77,7 @@ def encryption():
 
         # create MAC tag and appended it at the of the header, right before ciphertext
         print('Writing the MAC tag to the output file . .\n')
-        file_out.seek(144)  # 128 + 16 ; encrypted key + nonce
+        file_out.seek(272)  # 256 + 16 ; encrypted key + nonce
         tag = cipher.digest()
         file_out.write(tag)
 
@@ -111,7 +111,7 @@ def decryption():
     print('Reading the encrypted file . . . . . . . .')
     try:
         file_in = open(input_file, 'rb')
-        key = key_cipher.decrypt(file_in.read(128))
+        key = key_cipher.decrypt(file_in.read(256))
         nonce = file_in.read(16)
         tag = file_in.read(16)
         ciphered_data = file_in.read()
